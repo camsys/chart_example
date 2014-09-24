@@ -1,0 +1,75 @@
+@CHARSET "ISO-8859-1";
+
+body {
+	font: normal normal 13px Arial, Tahoma, Helvetica, FreeSans, sans-serif;
+	color: #333333;
+	background: #fcfbf5 none repeat scroll top left;
+	margin-left: 20px;
+	margin-top: 10px;
+	margin-right: 20px;
+	margin-bottom: 10px;
+	text-align:left;	
+}
+
+#allContent {
+	width:1150px;
+	margin:0px auto; /* Right and left margin widths set to "auto" */
+	text-align:left; /* Counteract to IE5/Win Hack */
+	padding:15px;
+	border:1px #333;
+}
+
+#myHeader {
+	margin-bottom: 10px;
+}
+
+#myExample {
+	margin-top: 10px;
+	text-align:left;
+}
+
+
+.header {
+	float: left;
+	margin-right: 10px;
+}
+
+#myFooter {
+	margin-top: 20px;
+	float: right;
+}
+
+.clear {
+	clear: both;
+}
+
+a:link {
+	text-decoration: underline;
+	color: #d52a33;
+}
+a:visited {
+	text-decoration: none;
+	color: #7d181e;
+}
+a:hover {
+	text-decoration: underline;
+	color: #d52a33;
+}
+
+h1 {
+	font: normal normal 20px Georgia, Utopia, 'Palatino Linotype', Palatino, serif;
+	color: #333333;
+	text-shadow: 0 0 -1px #000000;
+}
+
+h2 {
+	font: normal 18px Arial, Tahoma, Helvetica, FreeSans, sans-serif;
+	color: #333333;
+}
+
+.breadCrumbs {
+	font: normal normal 16px Georgia, Utopia, 'Palatino Linotype', Palatino, serif;
+	color: #6495ed;
+	text-shadow: 0 0 -1px #000000;
+	font-weight:bold;
+}
