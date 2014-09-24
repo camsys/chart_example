@@ -18,43 +18,62 @@ Ext.define('DEMO.controller.DisplayChart', {
 
 			init : function() {
                 this.application.on({
-                    event_ChartEvent_updateChart: this.selectChart,
+                    chartRequest: this.selectChart,
                     scope: this
                 });
 			},
 
 
-            selectChart: function(chartEvent) {
+            selectChart: function(chartRequest) {
+
                 this.getChartPanel().remove(this.getChartPanel().down('chart'), true);
-                var chartType = chartEvent.data.type;
+                var chartType = chartRequest.getType();
+                var chartInstance;
+
                 if(chartType === 'bar'){
-                    this.onBarTypeChart();
+                    chartInstance = this.onBarTypeChart();
                 }
                 if(chartType === 'column'){
-                    this.onColumnTypeChart();
+                    chartInstance = this.onColumnTypeChart();
                 }
                 if(chartType === 'pie'){
-                    this.onPieTypeChart();
+                    chartInstance = this.onPieTypeChart();
                 }
                 if(chartType === 'line'){
-                    this.onLineTypeChart();
+                    chartInstance = this.onLineTypeChart();
                 }
+
+                if(chartInstance.series.get(0).type != 'pie'){
+
+                    chartInstance.axes.get(0).title = chartRequest.getXtitle();
+                    chartInstance.axes.get(0).fields = [];
+                    chartInstance.axes.get(0).fields.push(chartRequest.getXfield());
+
+                    chartInstance.axes.get(1).title = chartRequest.getYtitle();
+                    chartInstance.axes.get(1).fields = [];
+                    chartInstance.axes.get(1).fields.push(chartRequest.getYfield());
+
+                }
+
+                chartInstance.series.get(0).title = chartRequest.getSeriesTitle();
+
+                this.getChartPanel().add(chartInstance);
             },
 
 			onBarTypeChart: function() {
-                this.getChartPanel().add(Ext.widget("cityBarChart"));
+                return Ext.widget("cityBarChart");
 			},
 
 			onColumnTypeChart: function() {
-                this.getChartPanel().add(Ext.widget("cityColumnChart"));
+                return Ext.widget("cityColumnChart");
 			},
 
 			onPieTypeChart: function() {
-                this.getChartPanel().add(Ext.widget("cityPieChart"));
+                return Ext.widget("cityPieChart");
 			},
 
 			onLineTypeChart: function() {
-                this.getChartPanel().add(Ext.widget("cityLineChart"));
+                return Ext.widget("cityLineChart");
 			},
 
 });

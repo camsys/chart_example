@@ -23,9 +23,9 @@ Ext.define('DEMO.view.chart.CityPieChart' ,{
           trackMouse: true,
           width: 200,
           height: 40,
-          renderer: function(storeItem, item) {
-        	    this.setTitle(storeItem.get('name') + ' current Year<br/>metric is ' + storeItem.get('metric'));
-        	}
+            renderer: function(storeItem, item) {
+                this.setTitle('Item: ' + storeItem.get('name') + '<br/>Measurement is ' + storeItem.get('metric'));
+            }
         },
         label: {
             display: 'rotate',

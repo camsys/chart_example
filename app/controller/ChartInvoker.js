@@ -36,31 +36,51 @@ Ext.define('DEMO.controller.ChartInvoker', {
 
 
     onBarTypeChart: function() {
-        var chartEvent = Ext.create('DEMO.model.ChartEvent', {
-            type: 'bar'
+        var chartEvent = Ext.create('DEMO.model.ChartRequest', {
+            type: 'bar',
+            xtitle: 'U.S. Cities',
+            ytitle: 'Population',
+            xfield: 'metric',
+            yfield: 'name',
+            seriesTitle: 'Current Year 2014'
         });
-        this.application.fireEvent(DEMO.model.ChartEvent.UPDATE_CHART, chartEvent);
+        this.application.fireEvent('chartRequest', chartEvent);
     },
 
     onColumnTypeChart: function() {
-        var chartEvent = Ext.create('DEMO.model.ChartEvent', {
-            type: 'column'
+        var chartEvent = Ext.create('DEMO.model.ChartRequest', {
+            type: 'column',
+            xtitle: 'U.S. Cities',
+            ytitle: 'Population',
+            xfield: 'metric',
+            yfield: 'name',
+            seriesTitle: 'Current Year 2014'
         });
-        this.application.fireEvent(DEMO.model.ChartEvent.UPDATE_CHART, chartEvent);
+        this.application.fireEvent('chartRequest', chartEvent);
     },
 
     onPieTypeChart: function() {
-        var chartEvent = Ext.create('DEMO.model.ChartEvent', {
-            type: 'pie'
+        var chartEvent = Ext.create('DEMO.model.ChartRequest', {
+            type: 'pie',
+            xtitle: 'U.S. Cities',
+            ytitle: 'Population',
+            xfield: 'metric',
+            yfield: 'name',
+            seriesTitle: 'Current Year 2014'
         });
-        this.application.fireEvent(DEMO.model.ChartEvent.UPDATE_CHART, chartEvent);
+        this.application.fireEvent('chartRequest', chartEvent);
     },
 
     onLineTypeChart: function() {
-        var chartEvent = Ext.create('DEMO.model.ChartEvent', {
-            type: 'line'
+        var chartEvent = Ext.create('DEMO.model.ChartRequest', {
+            type: 'line',
+            xtitle: 'U.S. Cities',
+            ytitle: 'Population',
+            xfield: 'metric',
+            yfield: 'name',
+            seriesTitle: 'Current Year 2014'
         });
-        this.application.fireEvent(DEMO.model.ChartEvent.UPDATE_CHART, chartEvent);
+        this.application.fireEvent('chartRequest', chartEvent);
     },
 
 

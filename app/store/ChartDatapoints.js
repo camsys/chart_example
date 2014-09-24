@@ -12,6 +12,6 @@ Ext.define('DEMO.store.ChartDatapoints', {
             root: 'data',
             totalProperty: 'totalCount',
             successProperty: 'success'
-        },
+        }
 	 }
 });

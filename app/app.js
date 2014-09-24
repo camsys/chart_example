@@ -18,9 +18,16 @@ Ext.application({
     autoCreateViewport: true,
 
     launch: function() {
-        var chartEvent = Ext.create('DEMO.model.ChartEvent', {
-            type: 'bar'
+        var chartRequest = Ext.create('DEMO.model.ChartRequest', {
+                type: 'bar',
+                xtitle: 'U.S. Cities',
+                ytitle: 'Population',
+                xfield: 'metric',
+                yfield: 'name',
+                seriesTitle: 'Current Year 2014'
         });
-        this.fireEvent(DEMO.model.ChartEvent.UPDATE_CHART, chartEvent);
+        this.fireEvent('chartRequest', chartRequest);
     }
 });
+
+

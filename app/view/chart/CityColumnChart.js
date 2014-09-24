@@ -18,7 +18,7 @@ Ext.define('DEMO.view.chart.CityColumnChart' ,{
     axes: [{
         type: 'Numeric',
         position: 'left',
-        fields: ['metric','metric2'],
+        fields: ['metric'],
         label: {
             renderer: Ext.util.Format.numberRenderer('0,0')
         },
@@ -40,35 +40,20 @@ Ext.define('DEMO.view.chart.CityColumnChart' ,{
           trackMouse: true,
           width: 200,
           height: 40,
-          renderer: function(storeItem, item) {
-        	  var currentYear = true;
-        	  for( var i = 0; i < item.series.items.length; i++ ){
-                  if( item == item.series.items[i] ){
-                	  	itemsPerRec = item.series.items.length / item.storeItem.store.getCount();
-                	  	if(item.series.yField[ i % itemsPerRec ] == "metric2"){
-                	  		currentYear = false;
-                	  	};  
-                  }
-              }
-        	  
-        	  if(currentYear){
-        		  this.setTitle(storeItem.get('name') + ' current Year<br/>metric is ' + storeItem.get('metric'));
-        	  }
-        	  else {
-        		  this.setTitle(storeItem.get('name') + ' last Year<br/>metric is ' + storeItem.get('metric2'));
-              }
-        	}
+            renderer: function(storeItem, item) {
+                this.setTitle('Item: ' + storeItem.get('name') + '<br/>Measurement is ' + storeItem.get('metric'));
+            }
         },
         label: {
           display: 'insideEnd',
-            field: ['metric','metric2'],
+            field: ['metric'],
             renderer: Ext.util.Format.numberRenderer('0'),
             orientation: 'vertical',
             color: '#333',
           'text-anchor': 'middle'
         },
         xField: 'name',
-        yField: ['metric','metric2'],
+        yField: ['metric'],
         title: ['Current Year', 'Last Year']
     }]
     
