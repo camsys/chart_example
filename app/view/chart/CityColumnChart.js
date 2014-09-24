@@ -7,7 +7,7 @@ Ext.define('DEMO.view.chart.CityColumnChart' ,{
     width: 1000,
     animate: true,
     shadow: true,
-    store : 'Cities',
+    store : 'ChartDatapoints',
     theme: 'Base',
     legend: {
         position: 'float',
@@ -18,11 +18,11 @@ Ext.define('DEMO.view.chart.CityColumnChart' ,{
     axes: [{
         type: 'Numeric',
         position: 'left',
-        fields: ['population','lastYearPopulation'],
+        fields: ['metric','metric2'],
         label: {
             renderer: Ext.util.Format.numberRenderer('0,0')
         },
-        title: 'Population',
+        title: 'metric',
         grid: true,
         minimum: 100000,
         majorTickSteps: 15
@@ -45,30 +45,30 @@ Ext.define('DEMO.view.chart.CityColumnChart' ,{
         	  for( var i = 0; i < item.series.items.length; i++ ){
                   if( item == item.series.items[i] ){
                 	  	itemsPerRec = item.series.items.length / item.storeItem.store.getCount();
-                	  	if(item.series.yField[ i % itemsPerRec ] == "lastYearPopulation"){
+                	  	if(item.series.yField[ i % itemsPerRec ] == "metric2"){
                 	  		currentYear = false;
                 	  	};  
                   }
               }
         	  
         	  if(currentYear){
-        		  this.setTitle(storeItem.get('name') + ' current Year<br/>Population is ' + storeItem.get('population'));
+        		  this.setTitle(storeItem.get('name') + ' current Year<br/>metric is ' + storeItem.get('metric'));
         	  }
         	  else {
-        		  this.setTitle(storeItem.get('name') + ' last Year<br/>Population is ' + storeItem.get('lastYearPopulation'));
+        		  this.setTitle(storeItem.get('name') + ' last Year<br/>metric is ' + storeItem.get('metric2'));
               }
         	}
         },
         label: {
           display: 'insideEnd',
-            field: ['population','lastYearPopulation'],
+            field: ['metric','metric2'],
             renderer: Ext.util.Format.numberRenderer('0'),
             orientation: 'vertical',
             color: '#333',
           'text-anchor': 'middle'
         },
         xField: 'name',
-        yField: ['population','lastYearPopulation'],
+        yField: ['metric','metric2'],
         title: ['Current Year', 'Last Year']
     }]
     

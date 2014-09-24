@@ -3,9 +3,9 @@ Ext.define('DEMO.controller.DisplayChart', {
 			extend : 'Ext.app.Controller',
 
 			//define the stores
-			stores : ['Cities'],
-			//define the models
-			models : ['City'],
+            stores : ['ChartDatapoints'],
+            //define the models
+            models : ['ChartDatapoint'],
 			//define the views
 			views : ['chart.CityBarChart','chart.CityColumnChart','chart.CityPieChart','chart.CityLineChart'],
 

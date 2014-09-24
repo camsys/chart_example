@@ -7,7 +7,7 @@ Ext.define('DEMO.view.chart.CityPieChart' ,{
     width: 800,
     animate: true,
     shadow: true,
-    store : 'Cities',
+    store : 'ChartDatapoints',
     theme: 'Base:gradients',
     legend: {
         position: 'right'
@@ -16,7 +16,7 @@ Ext.define('DEMO.view.chart.CityPieChart' ,{
     
     series: [{
         type: 'pie',
-        field: 'population',
+        field: 'metric',
         highlight: true,
         showInLegend: true,
         tips: {
@@ -24,7 +24,7 @@ Ext.define('DEMO.view.chart.CityPieChart' ,{
           width: 200,
           height: 40,
           renderer: function(storeItem, item) {
-        	    this.setTitle(storeItem.get('name') + ' current Year<br/>Population is ' + storeItem.get('population'));
+        	    this.setTitle(storeItem.get('name') + ' current Year<br/>metric is ' + storeItem.get('metric'));
         	}
         },
         label: {

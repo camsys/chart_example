@@ -7,7 +7,7 @@ Ext.define('DEMO.view.chart.CityLineChart' ,{
     width: 1000,
     animate: true,
     shadow: true,
-    store : 'Cities',
+    store : 'ChartDatapoints',
     theme: 'Base',
     legend: {
         position: 'bottom'
@@ -16,11 +16,11 @@ Ext.define('DEMO.view.chart.CityLineChart' ,{
     axes: [{
         type: 'Numeric',
         position: 'left',
-        fields: ['population','lastYearPopulation'],
+        fields: ['metric','metric2'],
         label: {
             renderer: Ext.util.Format.numberRenderer('0,0')
         },
-        title: 'Population',
+        title: 'metric',
         grid: true,
         minimum: 100000,
         majorTickSteps: 15
@@ -39,11 +39,11 @@ Ext.define('DEMO.view.chart.CityLineChart' ,{
           width: 200,
           height: 40,
           renderer: function(storeItem, item) {
-        	    this.setTitle(storeItem.get('name') + ' current Year<br/>Population is ' + storeItem.get('population'));
+        	    this.setTitle(storeItem.get('name') + ' current Year<br/>metric is ' + storeItem.get('metric'));
           }
         },
         xField: 'name',
-        yField: ['population'],
+        yField: ['metric'],
         title: ['Current Year']
     },
     {
@@ -55,11 +55,11 @@ Ext.define('DEMO.view.chart.CityLineChart' ,{
           width: 200,
           height: 40,
           renderer: function(storeItem, item) {
-        	    this.setTitle(storeItem.get('name') + ' last Year<br/>Population is ' + storeItem.get('lastYearPopulation'));
+        	    this.setTitle(storeItem.get('name') + ' last Year<br/>metric is ' + storeItem.get('metric2'));
           }
         },
         xField: 'name',
-        yField: ['lastYearPopulation'],
+        yField: ['metric2'],
         title: ['Last Year']
     }]
     

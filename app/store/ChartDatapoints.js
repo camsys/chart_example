@@ -1,6 +1,6 @@
-Ext.define('DEMO.store.Cities', {
+Ext.define('DEMO.store.ChartDatapoints', {
     extend: 'Ext.data.Store',
-    model: 'DEMO.model.City',
+    model: 'DEMO.model.ChartDatapoint',
     autoLoad: true,
     pageSize: 10,
     
@@ -9,7 +9,7 @@ Ext.define('DEMO.store.Cities', {
         url: '/chart_example/data.json',
         reader: {
             type: 'json',
-            root: 'cityList',
+            root: 'data',
             totalProperty: 'totalCount',
             successProperty: 'success'
         },
