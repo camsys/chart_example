@@ -3,11 +3,6 @@ Ext.Loader.setConfig({
     disableCaching: false
 });
 
-Ext.define('MySharedData', {
-    singleton: true,
-    currentChart: 'bar',
-});
-
 Ext.application({
     name: 'DEMO',
 
