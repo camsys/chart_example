@@ -7,7 +7,7 @@ Ext.define('DEMO.controller.ChartInvoker', {
     //define the models
     models : ['ChartDatapoint'],
     //define the views
-    views : ['chart.CityBarChart','chart.CityColumnChart','chart.CityPieChart','chart.CityLineChart'],
+    views : ['chart.BarChart','chart.ColumnChart','chart.PieChart','chart.LineChart'],
 
     refs:[
         {

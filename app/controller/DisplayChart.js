@@ -1,79 +1,106 @@
 Ext.define('DEMO.controller.DisplayChart', {
-			
-			extend : 'Ext.app.Controller',
 
-			//define the stores
-            stores : ['ChartDatapoints'],
-            //define the models
-            models : ['ChartDatapoint'],
-			//define the views
-			views : ['chart.CityBarChart','chart.CityColumnChart','chart.CityPieChart','chart.CityLineChart'],
+    extend : 'Ext.app.Controller',
 
-            refs:[
-                {
-                    ref: 'chartPanel',
-                    selector: 'chartPanel'
-                }
-            ],
+    //define the stores
+    stores : ['ChartDatapoints'],
+    //define the models
+    models : ['ChartDatapoint'],
+    //define the views
+    views : ['chart.BarChart','chart.ColumnChart','chart.PieChart','chart.LineChart'],
 
-			init : function() {
-                this.application.on({
-                    chartRequest: this.selectChart,
-                    scope: this
-                });
-			},
+    refs:[
+        {
+            ref: 'chartPanel',
+            selector: 'chartPanel'
+        }
+    ],
+
+    init : function() {
+        this.application.on({
+            chartRequest: this.selectChart,
+            scope: this
+        });
+    },
 
 
-            selectChart: function(chartRequest) {
+    selectChart: function(chartRequest) {
 
-                this.getChartPanel().remove(this.getChartPanel().down('chart'), true);
-                var chartType = chartRequest.getType();
-                var chartInstance;
+        this.getChartPanel().remove(this.getChartPanel().down('chart'), true);
+        var chartType = chartRequest.getType();
+        var chartInstance;
 
-                if(chartType === 'bar'){
-                    chartInstance = this.onBarTypeChart();
-                }
-                if(chartType === 'column'){
-                    chartInstance = this.onColumnTypeChart();
-                }
-                if(chartType === 'pie'){
-                    chartInstance = this.onPieTypeChart();
-                }
-                if(chartType === 'line'){
-                    chartInstance = this.onLineTypeChart();
-                }
+        if(chartType === 'bar'){
+            chartInstance = this.onBarTypeChart();
+            chartInstance.axes.get(0).title = chartRequest.getYtitle();
+            chartInstance.axes.get(0).fields = [chartRequest.getXfield()];
+            chartInstance.axes.get(1).title = chartRequest.getXtitle();
+            chartInstance.axes.get(1).fields = [chartRequest.getYfield()];
+            chartInstance.series.get(0).label.field = [chartRequest.getXfield()];
+            chartInstance.series.get(0).title = chartRequest.getSeriesTitle();
+            chartInstance.series.get(0).xField = chartRequest.getXfield();
+            chartInstance.series.get(0).yField = [chartRequest.getXfield()];
+            chartInstance.series.get(0).tips.renderer = function(storeItem, item) {
+                this.setTitle('Item: ' + storeItem.get(chartRequest.getYfield()) + '<br/>Measurement is ' + storeItem.get(chartRequest.getXfield()));
+            }
+        }
+        if(chartType === 'column'){
+            chartInstance = this.onColumnTypeChart();
+            chartInstance.axes.get(0).title = chartRequest.getYtitle();
+            chartInstance.axes.get(0).fields = [chartRequest.getXfield()];
+            chartInstance.axes.get(1).title = chartRequest.getXtitle();
+            chartInstance.axes.get(1).fields = [chartRequest.getYfield()];
+            chartInstance.series.get(0).label.field = [chartRequest.getXfield()];
+            chartInstance.series.get(0).title = chartRequest.getSeriesTitle();
+            chartInstance.series.get(0).xField = chartRequest.getXfield();
+            chartInstance.series.get(0).yField = [chartRequest.getXfield()];
+            chartInstance.series.get(0).tips.renderer = function(storeItem, item) {
+                this.setTitle('Item: ' + storeItem.get(chartRequest.getYfield()) + '<br/>Measurement is ' + storeItem.get(chartRequest.getXfield()));
+            }
+        }
+        if(chartType === 'pie'){
+            chartInstance = this.onPieTypeChart();
+            chartInstance.series.get(0).xField = chartRequest.getYfield();
+            chartInstance.series.get(0).yField = [chartRequest.getXfield()];
+            chartInstance.series.get(0).label.field = [chartRequest.getYfield()];
+            chartInstance.series.get(0).tips.renderer = function(storeItem, item) {
+                this.setTitle('Item: ' + storeItem.get(chartRequest.getYfield()) + '<br/>Measurement is ' + storeItem.get(chartRequest.getXfield()));
+            }
+        }
+        if(chartType === 'line'){
+            chartInstance = this.onLineTypeChart();
+            chartInstance.axes.get(0).title = chartRequest.getYtitle();
+            chartInstance.axes.get(0).fields = [chartRequest.getXfield()];
+            chartInstance.axes.get(1).title = chartRequest.getXtitle();
+            chartInstance.axes.get(1).fields = [chartRequest.getYfield()];
+            chartInstance.series.get(0).title = chartRequest.getSeriesTitle();
+            chartInstance.series.get(0).xField = chartRequest.getXfield();
+            chartInstance.series.get(0).yField = [chartRequest.getXfield()];
+            chartInstance.series.get(0).tips.renderer = function(storeItem, item) {
+                this.setTitle('Item: ' + storeItem.get(chartRequest.getXfield()) + '<br/>Measurement is ' + storeItem.get(chartRequest.getXfield()));
+            }
+        }
 
-                if(chartInstance.series.get(0).type != 'pie'){
 
-                    chartInstance.axes.get(0).title = chartRequest.getXtitle();
-                    chartInstance.axes.get(0).fields = [];
-                    chartInstance.axes.get(0).fields.push(chartRequest.getXfield());
 
-                    chartInstance.axes.get(1).title = chartRequest.getYtitle();
-                    chartInstance.axes.get(1).fields = [];
-                    chartInstance.axes.get(1).fields.push(chartRequest.getYfield());
 
-                }
+        this.getChartPanel().add(chartInstance);
+    },
 
-                chartInstance.series.get(0).title = chartRequest.getSeriesTitle();
+    onBarTypeChart: function() {
+        return Ext.widget("barChart");
+    },
 
-                this.getChartPanel().add(chartInstance);
-            },
+    onColumnTypeChart: function() {
+        return Ext.widget("columnChart");
+    },
 
-			onBarTypeChart: function() {
-                return Ext.widget("cityBarChart");
-			},
+    onPieTypeChart: function() {
+        return Ext.widget("pieChart");
+    },
 
-			onColumnTypeChart: function() {
-                return Ext.widget("cityColumnChart");
-			},
-
-			onPieTypeChart: function() {
-                return Ext.widget("cityPieChart");
-			},
-
-			onLineTypeChart: function() {
-                return Ext.widget("cityLineChart");
-			},
+    onLineTypeChart: function() {
+        return Ext.widget("lineChart");
+    },
 
 });

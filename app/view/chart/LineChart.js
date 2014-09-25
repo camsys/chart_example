@@ -1,7 +1,7 @@
-Ext.define('DEMO.view.chart.CityColumnChart' ,{
+Ext.define('DEMO.view.chart.LineChart' ,{
     extend: 'Ext.chart.Chart',
-    alias : 'widget.cityColumnChart',
-    id: 'cityColumnChart',
+    alias : 'widget.lineChart',
+    id: 'lineChart',
     
     height: 600,
     width: 1000,
@@ -10,9 +10,7 @@ Ext.define('DEMO.view.chart.CityColumnChart' ,{
     store : 'ChartDatapoints',
     theme: 'Base',
     legend: {
-        position: 'float',
-        x: 800,
-        y: 0
+        position: 'bottom'
     },
     
     axes: [{
@@ -33,28 +31,17 @@ Ext.define('DEMO.view.chart.CityColumnChart' ,{
         title: 'US Cities'
     }],
     series: [{
-        type: 'column',
+        type: 'line',
         axis: 'left',
         highlight: true,
         tips: {
           trackMouse: true,
           width: 200,
           height: 40,
-            renderer: function(storeItem, item) {
-                this.setTitle('Item: ' + storeItem.get('name') + '<br/>Measurement is ' + storeItem.get('metric'));
-            }
-        },
-        label: {
-          display: 'insideEnd',
-            field: ['metric'],
-            renderer: Ext.util.Format.numberRenderer('0'),
-            orientation: 'vertical',
-            color: '#333',
-          'text-anchor': 'middle'
         },
         xField: 'name',
         yField: ['metric'],
-        title: ['Current Year', 'Last Year']
+        title: ['Current Year']
     }]
     
 });
