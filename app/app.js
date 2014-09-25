@@ -15,6 +15,8 @@ Ext.application({
         'ChartPanel'
     ],
 
+    models : ['ChartDatapoint', 'ChartRequest'],
+
     autoCreateViewport: true,
 
     launch: function() {

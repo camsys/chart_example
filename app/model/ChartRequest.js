@@ -1,5 +1,4 @@
 Ext.define('DEMO.model.ChartRequest', {
-
     config:{
         type:'',
         xtitle:'',
@@ -10,7 +9,6 @@ Ext.define('DEMO.model.ChartRequest', {
     },
     constructor:function (config) {
         this.initConfig(config);
-
     },
     statics:{
         getType:function () {

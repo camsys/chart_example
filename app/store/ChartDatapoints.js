@@ -6,7 +6,7 @@ Ext.define('DEMO.store.ChartDatapoints', {
     
     proxy: {
         type: 'ajax',
-        url: '/chart_example/data.json',
+        url: 'data.json',
         reader: {
             type: 'json',
             root: 'data',
