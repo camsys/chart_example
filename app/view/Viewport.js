@@ -38,7 +38,12 @@ Ext.define('DEMO.view.Viewport', {
                 xtype: 'button',
                 text: 'Switch to Line Chart',
                 action: 'showLineChart',
-            }]
+            },
+            {
+                xtype: 'button',
+                text: 'showGrid',
+                action: 'showGrid',
+            },]
     },{
         region: 'center',
         xtype: 'panel',

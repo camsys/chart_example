@@ -29,8 +29,10 @@ Ext.define('DEMO.controller.ChartInvoker', {
             },
             'container button[action=showLineChart]' : {
                 click : this.onLineTypeChart
+            },
+            'container button[action=showGrid]' : {
+                click : this.onGrid
             }
-
         });
     },
 
@@ -83,5 +85,8 @@ Ext.define('DEMO.controller.ChartInvoker', {
         this.application.fireEvent('chartRequest', chartEvent);
     },
 
+    onGrid: function() {
+        this.application.fireEvent('gridRequest');
+    },
 
 });

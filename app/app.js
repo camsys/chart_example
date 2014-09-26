@@ -3,12 +3,17 @@ Ext.Loader.setConfig({
     disableCaching: false
 });
 
+Ext.override(Ext.view.Table, { enableTextSelection: true }); // Treepanels
+
+Ext.override(Ext.grid.View,  { enableTextSelection: true }); // Grids
+
 Ext.application({
     name: 'DEMO',
 
     controllers: [
         'DisplayChart',
-        'ChartInvoker'
+        'ChartInvoker',
+        'GridController'
     ],
 
     views: [
@@ -20,7 +25,8 @@ Ext.application({
     autoCreateViewport: true,
 
     launch: function() {
-        var chartRequest = Ext.create('DEMO.model.ChartRequest', {
+        this.fireEvent('gridRequest');
+        /*var chartRequest = Ext.create('DEMO.model.ChartRequest', {
                 type: 'bar',
                 xtitle: 'U.S. Cities',
                 ytitle: 'Population',
@@ -28,7 +34,7 @@ Ext.application({
                 yfield: 'name',
                 seriesTitle: 'Current Year 2014'
         });
-        this.fireEvent('chartRequest', chartRequest);
+        this.fireEvent('chartRequest', chartRequest);*/
     }
 });
 

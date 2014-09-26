@@ -25,8 +25,7 @@ Ext.define('DEMO.controller.DisplayChart', {
 
 
     selectChart: function(chartRequest) {
-
-        this.getChartPanel().remove(this.getChartPanel().down('chart'), true);
+        this.getChartPanel().removeAll();
         var chartType = chartRequest.getType();
         var chartInstance;
 
@@ -81,10 +80,8 @@ Ext.define('DEMO.controller.DisplayChart', {
             }
         }
 
-
-
-
         this.getChartPanel().add(chartInstance);
+
     },
 
     onBarTypeChart: function() {
