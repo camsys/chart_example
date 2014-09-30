@@ -2,24 +2,14 @@ Ext.define('DEMO.view.grid.GridPanel', {
     extend: 'Ext.container.Container',
     alias : 'widget.gridPanel',
     items:[
-    /*{
+    {
         xtype: 'toolbar',
         dock: 'top',
         items: [
             {
-                id: 'hideShow',
+                id: 'expand',
                 xtype : 'button',
-                text: 'Hide Summary',
-                pressed: true,
-                enableToggle: true
-            },
-            {
-                xtype: 'tbseparator'
-            },
-            {
-                id: 'grouping',
-                xtype : 'button',
-                text: 'Disable Grouping',
+                text: 'Expand All',
                 pressed: true,
                 enableToggle: true
             },
@@ -34,7 +24,7 @@ Ext.define('DEMO.view.grid.GridPanel', {
                 enableToggle: true
             },
         ]
-    },*/
+    },
     {
         xtype: 'summaryGrid'
     },]

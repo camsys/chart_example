@@ -25,7 +25,11 @@ Ext.define('DEMO.controller.DisplayChart', {
 
 
     selectChart: function(chartRequest) {
-        this.getReportPanel().removeAll();
+
+        for (i=0; i < this.getReportPanel().items.getCount(); ++i) {
+            this.getReportPanel().items.get(i).destroy()
+        }
+
         var chartType = chartRequest.getType();
         var chartInstance;
 

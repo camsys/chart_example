@@ -14,9 +14,13 @@ Ext.define('DEMO.store.Countries', {
             sums: ['gnp'],
             averages: ['lifeExpectancy'],
 
+            filter: null,
+
             getData: function (data) {
-                if (filter) {
-                    return filter.children;
+                if (this.filter) {
+                    var filterNode = this.filter[0];
+                    this.filter.shift();
+                    return filterNode.children;
                 } else {
                     var records = data[this.root];
 
@@ -25,13 +29,9 @@ Ext.define('DEMO.store.Countries', {
                         rec.leaf = true;
                     });
 
-                    Ext.each(records, function (rec) {
-                        rec.text = rec.name;
-                    });
-
                     for (var i in this.levels) {
                         records = this.processTree(records, this.levels[i], this.levels, this.sums, this.averages);
-                    }
+                    };
 
                     data[this.root] = records;
 
@@ -106,15 +106,15 @@ Ext.define('DEMO.store.Countries', {
             direction: 'ASC'
         }
     ],
-
-    filter: undefined,
-
     listeners: {
 
         beforeload: function (store, operation, options) {
-            filter = null;
             if (operation.node.data.level) {
-                filter = operation.node.data;
+                if(!this.proxy.reader.filter)
+                    this.proxy.reader.filter = [];
+                this.proxy.reader.filter.push(operation.node.data);
+            }else{
+                this.proxy.reader.filter = null;
             }
         },
     }

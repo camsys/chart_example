@@ -8,7 +8,7 @@ Ext.define('DEMO.view.grid.SummaryGrid' ,{
     padding: '5 5 5 5',
     useArrows: true,
     multiSelect: true,
-    singleExpand: true,
+    singleExpand: false,
     rootVisible: false,
     currentElement: 0,
     columns: [
@@ -35,9 +35,8 @@ Ext.define('DEMO.view.grid.SummaryGrid' ,{
             })
         },
         {
-            //we must use the templateheader component so we can use a custom tpl
             xtype: 'templatecolumn',
-            text: 'Life Expectancy',
+            text: 'Average Life Expectancy',
             flex: 1,
             sortable: true,
             dataIndex: 'lifeExpectancy',
@@ -54,12 +53,6 @@ Ext.define('DEMO.view.grid.SummaryGrid' ,{
      listeners: {
          load: function (tree, node, records) {
              console.log('After loading a node: ' + node);
-             if(node.get('checked')){
-                 node.eachChild(function (childNode){
-                     childNode.set('checked',false);
-                     childNode.set('expanded',false);
-                 });
-             }
          }
      }
 });

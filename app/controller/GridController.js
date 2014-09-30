@@ -32,73 +32,29 @@ Ext.define('DEMO.controller.GridController', {
 
         this.control({
 
-            'viewport > panel' : {
-                render : this.onPanelRendered
-            },
-            'reportPanel button[id=hideShow]' : {
-                toggle : this.onSummaryToggle
-            },
-            'reportPanel button[id=grouping]' : {
-                toggle : this.onSummaryDisable
+            'reportPanel button[id=expand]' : {
+                toggle : this.onExpand
             },
             'reportPanel button[id=collapse]' : {
-                toggle : this.onGroupCollapse
+                toggle : this.onCollapse
             }
-
         });
     },
 
     selectGrid: function () {
-        this.getReportPanel().removeAll();
+        for (i = 0; i < this.getReportPanel().items.getCount(); ++i) {
+            this.getReportPanel().items.get(i).destroy()
+        }
         var gridInstance = Ext.widget("gridPanel");
         this.getReportPanel().add(gridInstance);
     },
 
-    onPanelRendered : function() {
-        //just a console log to show when the panel si rendered
-        console.log('The panel was rendered');
+    onExpand : function(button, pressed) {
+        this.getSummaryGrid().expandAll();
     },
 
-    onSummaryToggle : function(button, pressed) {
-        console.log('Sumary toggle button was pressed: ' + pressed);
-        var buttonText = pressed ? 'Hide Summary' : 'Show Summary';
-        button.setText(buttonText);
-        var view = this.getReportPanel().down('summaryGrid').getView();
-        view.getFeature('groupSummary').toggleSummaryRow(pressed);
-        view.refresh();
+    onCollapse : function(button, pressed) {
+        this.getSummaryGrid().collapseAll();
     },
-
-    onSummaryDisable : function(button, pressed) {
-        console.log('Sumary enable/disable button was pressed: ' + pressed);
-        var view = this.getReportPanel().down('summaryGrid').getView();
-        if(pressed){
-            button.setText('Disable Grouping');
-            view.getFeature('groupSummary').enable();
-        }
-        else {
-            button.setText('Enable Grouping');
-            view.getFeature('groupSummary').disable();
-        }
-    },
-
-    onGroupCollapse : function(button, pressed) {
-        console.log('Sumary enable/disable button was pressed: ' + pressed);
-        var view = this.getReportPanel().down('summaryGrid').getView();
-        var groupFeature = view.getFeature('groupSummary');
-        if(pressed){
-            button.setText('Collapse All');
-            view.getEl().query('.x-grid-group-hd').forEach(function (group) {
-                var groupBody = Ext.fly(group.nextSibling, '_grouping');
-                groupFeature.expand(groupBody);
-            });
-        }
-        else {
-            button.setText('Expand All');
-            view.getEl().query('.x-grid-group-hd').forEach(function (group) {
-                var groupBody = Ext.fly(group.nextSibling, '_grouping');
-                groupFeature.collapse(groupBody);
-            });
-        }
-    }
 
 });
