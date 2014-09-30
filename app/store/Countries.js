@@ -9,14 +9,21 @@ Ext.define('DEMO.store.Countries', {
             totalProperty: 'totalCount',
             root: 'countries',
             successProperty: 'success',
+
             levels: ['region', 'continent'],
             sums: ['gnp'],
             averages: ['lifeExpectancy'],
-            getData: function (data, scope) {
+
+            getData: function (data) {
                 if (filter) {
                     return filter.children;
                 } else {
                     var records = data[this.root];
+
+                    Ext.each(records, function (rec) {
+                        rec.text = rec.name;
+                        rec.leaf = true;
+                    });
 
                     Ext.each(records, function (rec) {
                         rec.text = rec.name;
@@ -33,8 +40,6 @@ Ext.define('DEMO.store.Countries', {
             },
 
             processTree: function (records, field, fields, sums, averages) {
-
-
 
                 var keys = {};
                 Ext.each(records, function (rec) {
