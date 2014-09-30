@@ -33,6 +33,38 @@ Ext.define('DEMO.store.Countries', {
                         records = this.processTree(records, this.levels[i], this.levels, this.sums, this.averages);
                     };
 
+                    var totalNode = [];
+                    totalNode.text = 'Total';
+                    totalNode.leaf = true;
+
+                    var averages = this.averages;
+                    var sums = this.sums;
+
+                    for (var i in records) {
+                        var rec = records[i];
+                        for (var i in sums) {
+                            var sum = sums[i];
+                            if(!totalNode[sum]){
+                                totalNode[sum] = 0;
+                            }
+                            totalNode[sum] = totalNode[sum] + rec[sum];
+                        };
+                        for (var i in averages) {
+                            var average = averages[i];
+                            if(!totalNode[average]){
+                                totalNode[average] = 0;
+                            }
+                            totalNode[average] = totalNode[average] + rec[average];
+                        };
+                    };
+
+
+                    for (var i in averages) {
+                        var average = averages[i];
+                        totalNode[average] = totalNode[average] / records.length;
+                    };
+                    records .push(totalNode);
+
                     data[this.root] = records;
 
                     return data;

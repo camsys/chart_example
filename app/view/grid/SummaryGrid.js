@@ -54,5 +54,11 @@ Ext.define('DEMO.view.grid.SummaryGrid' ,{
          load: function (tree, node, records) {
              console.log('After loading a node: ' + node);
          }
-     }
+     },
+
+    //scrollbar for tree panel is busted in ExtJS 4.2.2, this hack partially fixes it.
+    scroll          : false,
+    viewConfig      : {
+        style           : { overflow: 'auto', overflowX: 'hidden' }
+    },
 });
