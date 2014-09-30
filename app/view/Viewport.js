@@ -3,7 +3,7 @@ Ext.define('DEMO.view.Viewport', {
     requires:[
         'Ext.tab.Panel',
         'Ext.layout.container.Border',
-        'DEMO.view.ChartPanel'
+        'DEMO.view.ReportPanel'
     ],
 
     layout: {
@@ -46,10 +46,10 @@ Ext.define('DEMO.view.Viewport', {
             },]
     },{
         region: 'center',
-        xtype: 'panel',
+        xtype: 'container',
         items:[{
             title: 'Center Tab 1',
-            xtype: 'chartPanel'
+            xtype: 'reportPanel'
         }]
     }]
 });

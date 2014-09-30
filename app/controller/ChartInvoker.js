@@ -11,8 +11,8 @@ Ext.define('DEMO.controller.ChartInvoker', {
 
     refs:[
         {
-            ref: 'chartPanel',
-            selector: 'chartPanel'
+            ref: 'reportPanel',
+            selector: 'reportPanel'
         }
     ],
 

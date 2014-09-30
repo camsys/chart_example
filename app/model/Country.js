@@ -7,11 +7,9 @@ Ext.define('DEMO.model.Country', {
         'region',
         'lifeExpectancy',
         'gnp',
-        {
-            name: 'myGroup',
-            mapping: 'continent',
-            convert: function(v, record) {
-                return v + ': ' + record.data.region;
-            }
-        }]
+        'hemisphere',
+        'level',
+        'children',
+        'text'
+    ]
 });

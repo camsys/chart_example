@@ -11,8 +11,8 @@ Ext.define('DEMO.controller.DisplayChart', {
 
     refs:[
         {
-            ref: 'chartPanel',
-            selector: 'chartPanel'
+            ref: 'reportPanel',
+            selector: 'reportPanel'
         }
     ],
 
@@ -25,7 +25,7 @@ Ext.define('DEMO.controller.DisplayChart', {
 
 
     selectChart: function(chartRequest) {
-        this.getChartPanel().removeAll();
+        this.getReportPanel().removeAll();
         var chartType = chartRequest.getType();
         var chartInstance;
 
@@ -80,7 +80,7 @@ Ext.define('DEMO.controller.DisplayChart', {
             }
         }
 
-        this.getChartPanel().add(chartInstance);
+        this.getReportPanel().add(chartInstance);
 
     },
 

@@ -17,7 +17,7 @@ Ext.application({
     ],
 
     views: [
-        'ChartPanel'
+        'ReportPanel'
     ],
 
     models : ['ChartDatapoint', 'ChartRequest'],
