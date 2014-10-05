@@ -2,9 +2,9 @@ Ext.define('DEMO.controller.GridController', {
     extend : 'Ext.app.Controller',
 
     //define the stores
-    stores : ['Countries'],
+    stores : ['Bridges'],
     //define the models
-    models : ['Country'],
+    models : ['Bridge', 'TreeGridRow'],
     //define the views
     views : ['grid.SummaryGrid', 'grid.GridPanel', 'ReportPanel'],
     //define refs

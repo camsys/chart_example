@@ -1,7 +1,7 @@
 Ext.define('DEMO.view.grid.SummaryGrid' ,{
     alias : 'widget.summaryGrid',
-    title : 'List of Countries Grouped by Continent and Region',
-    store : 'Countries',
+    title : 'List of Segments Grouped by Region and Jurisdiction',
+    store : 'Bridges',
     extend: 'Ext.tree.Panel',
     height: 400,
     width: 800,
@@ -18,33 +18,21 @@ Ext.define('DEMO.view.grid.SummaryGrid' ,{
             flex: 2,
             sortable: true,
             dataIndex: 'text'
+        },{
+            text: "Bridge",
+            dataIndex: "BridgeName"
         },
         {
             xtype: 'templatecolumn',
-            text: 'GNP',
+            text: 'Length',
             flex: 1,
             sortable: true,
-            dataIndex: 'gnp',
-            tpl: Ext.create('Ext.XTemplate', '{gnp:this.format}', {
+            dataIndex: 'Length',
+            tpl: Ext.create('Ext.XTemplate', '{Length:this.format}', {
                 format: function (val) {
                     if(val == 0)
                         return 'N/A'
-                    val = Math.round(val);
-                    return val.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
-                }
-            })
-        },
-        {
-            xtype: 'templatecolumn',
-            text: 'Average Life Expectancy',
-            flex: 1,
-            sortable: true,
-            dataIndex: 'lifeExpectancy',
-            tpl: Ext.create('Ext.XTemplate', '{lifeExpectancy:this.format}', {
-                format: function (val) {
-                    if(val == 0)
-                        return 'N/A'
-                    return Math.round(val);
+                    return Math.round(val * 100) / 100;
                 }
             })
         }

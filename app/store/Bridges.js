@@ -1,19 +1,16 @@
-Ext.define('DEMO.store.Countries', {
+Ext.define('DEMO.store.Bridges', {
     extend: 'Ext.data.TreeStore',
-    model: 'DEMO.model.Country',
+    model: 'DEMO.model.Bridge',
     proxy: {
         type: 'ajax',
-        url: 'country.json',
+        url: 'features.json',
         reader: {
             type: 'json',
-            totalProperty: 'totalCount',
-            root: 'countries',
-            successProperty: 'success',
-
-            levels: ['region', 'continent'],
-            sums: ['gnp'],
-            averages: ['lifeExpectancy'],
-
+            root: 'BridgeFeatureResults',
+            levels: ['Jurisdiction', 'FunctionalClass'],
+            sums: ['Length'],
+            averages: ['NumberOfLanes'],
+            leafName: 'RouteName',
             filter: null,
 
             getData: function (data) {
@@ -25,13 +22,11 @@ Ext.define('DEMO.store.Countries', {
                     var records = data[this.root];
 
                     Ext.each(records, function (rec) {
-                        rec.text = rec.name;
+                        rec.text = rec[this.leafName];
                         rec.leaf = true;
-                    });
+                    }, this);
 
-                    for (var i in this.levels) {
-                        records = this.processTree(records, this.levels[i], this.levels, this.sums, this.averages);
-                    };
+                    records = this.processTree(records, 0, this.levels, this.sums, this.averages);
 
                     var totalNode = [];
                     totalNode.text = 'Total';
@@ -71,8 +66,10 @@ Ext.define('DEMO.store.Countries', {
                 }
             },
 
-            processTree: function (records, field, fields, sums, averages) {
-
+            processTree: function (records, depth, levels, sums, averages) {
+                if(levels.length == depth)
+                    return;
+                var field = levels[depth];
                 var keys = {};
                 Ext.each(records, function (rec) {
                     key = rec[field];
@@ -88,12 +85,6 @@ Ext.define('DEMO.store.Countries', {
                     node.children = [];
                     Ext.each(records, function (rec) {
                         if (rec[field] == key) {
-                            for (var fieldName in rec) {
-                                if(fields.indexOf(fieldName) > -1){
-                                    node[fieldName] = rec[fieldName];
-                                }
-                            }
-
                             Ext.each(sums, function (sum) {
                                 if(!node[sum]){
                                     node[sum] = 0;
@@ -105,7 +96,9 @@ Ext.define('DEMO.store.Countries', {
                                 if(!node[average]){
                                     node[average] = 0;
                                 }
-                                node[average] = node[average] + rec[average];
+                                if(rec[average]){
+                                    node[average] = node[average] + rec[average];
+                                }
                             });
 
                             node.children.push(rec);
@@ -121,13 +114,26 @@ Ext.define('DEMO.store.Countries', {
                     }
                 });
 
+                Ext.each(aggs, function (agg) {
+                    if(levels.length > depth + 1){
+                        console.log(agg.text + ' level: ' +  levels[depth + 1] + ' children: ' + agg.children.length);
+                        agg.children = this.processTree(agg.children, depth + 1, this.levels, this.sums, this.averages);
+                    }else{
+                        var path = '';
+                        for (var i = depth; i < levels.length; i++) {
+                            path = path + "-";
+                        };
+                        console.log(path + agg.text + ' level: ' +  levels[depth] + ' children: ' + agg.children.length);
+                    }
+                }, this);
+
                 return aggs;
 
             }
         }
     },
     root: {
-        text: 'Tree display of Countries',
+        text: 'Tree display of Data',
         id: 'myTree',
         expanded: false
     },
