@@ -116,14 +116,7 @@ Ext.define('DEMO.store.Bridges', {
 
                 Ext.each(aggs, function (agg) {
                     if(levels.length > depth + 1){
-                        console.log(agg.text + ' level: ' +  levels[depth + 1] + ' children: ' + agg.children.length);
                         agg.children = this.processTree(agg.children, depth + 1, this.levels, this.sums, this.averages);
-                    }else{
-                        var path = '';
-                        for (var i = depth; i < levels.length; i++) {
-                            path = path + "-";
-                        };
-                        console.log(path + agg.text + ' level: ' +  levels[depth] + ' children: ' + agg.children.length);
                     }
                 }, this);
 
