@@ -1,13 +1,8 @@
 Ext.define('DEMO.controller.GridController', {
     extend : 'Ext.app.Controller',
 
-    //define the stores
-    stores : ['Bridges'],
-    //define the models
-    models : ['Bridge', 'TreeGridRow'],
-    //define the views
-    views : ['grid.SummaryGrid', 'grid.GridPanel', 'ReportPanel'],
-    //define refs
+    views : ['grid.SummaryGrid'],
+
     refs:[
         {
             ref: 'summaryGrid',
@@ -26,7 +21,7 @@ Ext.define('DEMO.controller.GridController', {
     init : function() {
 
         this.application.on({
-            gridRequest: this.selectGrid,
+            reportRequest: this.selectReport,
             scope: this
         });
 
@@ -41,20 +36,221 @@ Ext.define('DEMO.controller.GridController', {
         });
     },
 
-    selectGrid: function () {
+    selectReport: function (reportRequest) {
         for (i = 0; i < this.getReportPanel().items.getCount(); ++i) {
             this.getReportPanel().items.get(i).destroy()
         }
-        var gridInstance = Ext.widget("gridPanel");
-        this.getReportPanel().add(gridInstance);
+        var summaryGrid = Ext.widget("summaryGrid");
+        var columnCount = reportRequest.getHeaders().length;
+        summaryGrid.layout.columns = columnCount;
+
+        var featureData = reportRequest.getData();
+
+        Ext.each(featureData, function (feature) {
+            if(feature['Length'] && feature['NumberOfLanes']){
+                feature.LaneMiles  = feature['Length'] * feature['NumberOfLanes']
+            }else{
+                feature.LaneMiles = 0;
+            }
+        });
+
+        for(i = 0; i <5000; i++){
+            summaryGrid.add({
+                html: i.toString()
+            });
+        }
+
+        /*var tree = this.buildHierarchy(featureData, reportRequest);  //create the tree based on the levels defined in request
+        this.buildTable(tree, summaryGrid, reportRequest);*/
+
+       /* reportRequest.getLevels().shift();
+        tree = this.buildHierarchy(featureData, reportRequest);
+        this.buildTable(tree, summaryGrid, reportRequest);*/
+
+        this.getReportPanel().add(summaryGrid);
     },
 
-    onExpand : function(button, pressed) {
-        this.getSummaryGrid().expandAll();
+    buildTable: function (tree, table, reportRequest) {
+
+        Ext.each(tree, function (node) {
+            var levelIndex = reportRequest.getLevels().indexOf(node.level);
+
+            //pad the left level columns with empty cells
+            for(i = 0; i < levelIndex; i++){
+                table.add({
+                    html: "&nbsp;"
+                });
+            }
+
+            if(levelIndex < reportRequest.getLevels().length -1){
+                //add a level header row
+                table.add({
+                    html: node.text,
+                    cellCls: 'highlight',
+                    colspan: reportRequest.getFields().length - levelIndex
+                });
+            }else{
+                //bottom level
+                table.add({
+                    html: node.text
+                });
+
+                Ext.each(reportRequest.getFields(), function (field) {
+                    if(reportRequest.getLevels().indexOf(field) == -1){
+
+                        var value = node[field] == null ? "&nbsp;" : node[field];
+                        if(typeof value == 'number'){
+                            value = Math.round(value);
+                        }
+                        table.add({
+                            html: value.toString()
+                        });
+                    }
+
+                }, this);
+            }
+
+            if(node.level && reportRequest.getLevels().indexOf(node.level) < reportRequest.getLevels().length - 1){
+                if (reportRequest.getLevels().indexOf(node.level) == reportRequest.getLevels().length - 2) {
+                    //add subheader above detail rows
+                    for (i = 0; i < levelIndex + 1; i++) {
+                        table.add({
+                            html: "&nbsp;"
+                        });
+                    }
+                    table.add({
+                        html: reportRequest.getHeaders()[levelIndex + 1],
+                        colspan: reportRequest.getLevels().length - levelIndex - 1
+                    });
+                    for (i = reportRequest.getLevels().length; i < reportRequest.getHeaders().length; i++) {
+                        table.add({
+                            html: reportRequest.getHeaders()[i]
+                        });
+                    }
+                    this.buildTable(node.children, table, reportRequest);
+                    //add subtotal row
+                    for (i = 0; i < levelIndex + 1; i++) {
+                        table.add({
+                            html: "&nbsp;"
+                        });
+                    }
+                    table.add({
+                        html: "Subtotal"
+                    });
+                    Ext.each(reportRequest.getFields(), function (field) {
+                        if(reportRequest.getLevels().indexOf(field) == -1){
+
+                            var value = node[field] == null ? "&nbsp;" : node[field];
+                            if(typeof value == 'number'){
+                                value = Math.round(value);
+                            }
+                            table.add({
+                                html: value.toString()
+                            });
+                        }
+                    }, this);
+                }else{
+                    this.buildTable(node.children, table, reportRequest);
+                }
+            }
+        }, this);
     },
 
-    onCollapse : function(button, pressed) {
-        this.getSummaryGrid().collapseAll();
-    },
+    buildHierarchy: function (records, reportRequest) {
 
+            records = this.processTree(records, 0, reportRequest.levels, reportRequest.sums, reportRequest.averages);
+
+            var totalNode = [];
+            totalNode.text = 'Total';
+            totalNode.leaf = true;
+
+            var averages = reportRequest.averages;
+            var sums = reportRequest.sums;
+
+            for (var i in records) {
+                var rec = records[i];
+                for (var i in sums) {
+                    var sum = sums[i];
+                    if(!totalNode[sum]){
+                        totalNode[sum] = 0;
+                    }
+                    totalNode[sum] = totalNode[sum] + rec[sum];
+                };
+                for (var i in averages) {
+                    var average = averages[i];
+                    if(!totalNode[average]){
+                        totalNode[average] = 0;
+                    }
+                    totalNode[average] = totalNode[average] + rec[average];
+                };
+            };
+
+
+            for (var i in averages) {
+                var average = averages[i];
+                totalNode[average] = totalNode[average] / records.length;
+            };
+            records.push(totalNode);
+            return records;
+        },
+
+
+    processTree: function (records, depth, levels, sums, averages) {
+        var field = levels[depth];
+        var keys = {};
+        Ext.each(records, function (rec) {
+            key = rec[field];
+            keys[key] = key;
+        });
+        var aggs = [];
+        var keys = Object.keys(keys);
+        keys.sort();
+
+        Ext.each(keys, function (key) {
+            var node = [];
+            node.level = field;
+            node.text = key;
+            node.children = [];
+            Ext.each(records, function (rec) {
+                if (rec[field] == key) {
+                    Ext.each(sums, function (sum) {
+                        if(!node[sum]){
+                            node[sum] = 0;
+                        }
+                        node[sum] = node[sum] + rec[sum];
+                    });
+
+                    Ext.each(averages, function (average) {
+                        if(!node[average]){
+                            node[average] = 0;
+                        }
+                        if(rec[average]){
+                            node[average] = node[average] + rec[average];
+                        }
+                    });
+                    node.children.push(rec);
+                }
+            });
+            aggs.push(node);
+        });
+        Ext.each(aggs, function (agg) {
+            for (var fieldName in agg) {
+                if(averages.indexOf(fieldName) > -1){
+                    agg[fieldName] = agg[fieldName] / agg.children.length;
+                }
+            }
+        });
+
+        Ext.each(aggs, function (agg) {
+            if(levels.length > depth + 1){
+                agg.children = this.processTree(agg.children, depth + 1, levels, sums, averages);
+                Ext.each(agg.children, function (child) {
+                    child.parent = agg;
+                }, this);
+            }
+        }, this);
+
+        return aggs;
+
+    }
 });

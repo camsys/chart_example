@@ -1,5 +1,5 @@
 Ext.define('DEMO.model.Bridge', {
-    extend: 'DEMO.model.TreeGridRow',
+    extend: 'DEMO.model.Node',
     fields: [
         "RouteId",
         "RouteName",

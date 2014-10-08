@@ -86,7 +86,7 @@ Ext.define('DEMO.controller.ChartInvoker', {
     },
 
     onGrid: function() {
-        this.application.fireEvent('gridRequest');
+        this.application.fireEvent('reportRequest');
     },
 
 });

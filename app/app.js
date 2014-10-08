@@ -3,10 +3,6 @@ Ext.Loader.setConfig({
     disableCaching: false
 });
 
-Ext.override(Ext.view.Table, { enableTextSelection: true }); // Treepanels
-
-Ext.override(Ext.grid.View,  { enableTextSelection: true }); // Grids
-
 Ext.application({
     name: 'DEMO',
 
@@ -20,12 +16,39 @@ Ext.application({
         'ReportPanel'
     ],
 
+    stores: [
+        'Bridges'
+    ],
+
     models : ['ChartDatapoint', 'ChartRequest'],
 
     autoCreateViewport: true,
 
     launch: function() {
-        this.fireEvent('gridRequest');
+
+        var queryData = undefined;
+        Ext.Ajax.request({
+            url: 'features.json',
+            async: false,
+            scope: this,
+            success: function(response){
+                queryData = JSON.parse(response.responseText);
+            }
+        }, this);
+
+        var featureData = queryData['RouteFeatureResults'];
+
+        var reportRequest = Ext.create('DEMO.model.ReportRequest', {
+            data:featureData,
+            levels: ['Jurisdiction', 'FunctionalClass', 'RouteName'],
+            //levels: ['Jurisdiction', 'FunctionalClass'],
+            sums: ['Length', 'LaneMiles'],
+            averages: [],
+            headers: ['Jurisdiction', 'Functional Class', 'Route Name', 'Length', 'Lane Miles'],
+            fields: ['Jurisdiction', 'FunctionalClass', 'RouteName', 'Length', 'LaneMiles'],
+        });
+        this.fireEvent('reportRequest', reportRequest);
+
         /*var chartRequest = Ext.create('DEMO.model.ChartRequest', {
                 type: 'bar',
                 xtitle: 'U.S. Cities',
