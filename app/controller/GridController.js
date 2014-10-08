@@ -54,18 +54,28 @@ Ext.define('DEMO.controller.GridController', {
             }
         });
 
-        for(i = 0; i <5000; i++){
-            summaryGrid.add({
-                html: i.toString()
-            });
-        }
+        var tree = this.buildHierarchy(featureData, reportRequest);  //create the tree based on the levels defined in request
+        this.buildTable(tree, summaryGrid, reportRequest);  //add the data to the table
 
-        /*var tree = this.buildHierarchy(featureData, reportRequest);  //create the tree based on the levels defined in request
-        this.buildTable(tree, summaryGrid, reportRequest);*/
-
-       /* reportRequest.getLevels().shift();
+        //now add a summary section below that aggregates by the second dimension
+        var topLevel = reportRequest.getLevels().shift();
         tree = this.buildHierarchy(featureData, reportRequest);
-        this.buildTable(tree, summaryGrid, reportRequest);*/
+        var summaryRoot = {};
+        summaryRoot.level = topLevel;
+        summaryRoot.text = "All " + topLevel + "s";
+        summaryRoot.children = tree;
+
+        reportRequest.getLevels().unshift(topLevel);  //put the level back in so the column offsets are correct
+        Ext.each(reportRequest.getSums(), function (sum) {
+            Ext.each(summaryRoot.children, function (child) {
+                if(!summaryRoot[sum]){
+                    summaryRoot[sum] = 0;
+                }
+                summaryRoot[sum] = summaryRoot[sum] + child[sum];
+            });
+        }, this);
+
+        this.buildTable(summaryRoot, summaryGrid, reportRequest);
 
         this.getReportPanel().add(summaryGrid);
     },
@@ -127,7 +137,16 @@ Ext.define('DEMO.controller.GridController', {
                             html: reportRequest.getHeaders()[i]
                         });
                     }
+
                     this.buildTable(node.children, table, reportRequest);
+
+                    var parentText = node.text;
+                    var parent = node.parent;
+                    while(parent != null){
+                        parentText = parent.text;
+                        parent = parent.parent;
+                    }
+
                     //add subtotal row
                     for (i = 0; i < levelIndex + 1; i++) {
                         table.add({
@@ -135,7 +154,7 @@ Ext.define('DEMO.controller.GridController', {
                         });
                     }
                     table.add({
-                        html: "Subtotal"
+                        html: parentText.indexOf('All') == 0 ? "Total" : "Subtotal"
                     });
                     Ext.each(reportRequest.getFields(), function (field) {
                         if(reportRequest.getLevels().indexOf(field) == -1){
@@ -160,7 +179,7 @@ Ext.define('DEMO.controller.GridController', {
 
             records = this.processTree(records, 0, reportRequest.levels, reportRequest.sums, reportRequest.averages);
 
-            var totalNode = [];
+            /*var totalNode = [];
             totalNode.text = 'Total';
             totalNode.leaf = true;
 
@@ -190,7 +209,7 @@ Ext.define('DEMO.controller.GridController', {
                 var average = averages[i];
                 totalNode[average] = totalNode[average] / records.length;
             };
-            records.push(totalNode);
+            records.push(totalNode);*/
             return records;
         },
 

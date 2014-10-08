@@ -40,12 +40,14 @@ Ext.application({
 
         var reportRequest = Ext.create('DEMO.model.ReportRequest', {
             data:featureData,
-            levels: ['Jurisdiction', 'FunctionalClass', 'RouteName'],
-            //levels: ['Jurisdiction', 'FunctionalClass'],
+            //levels: ['Jurisdiction', 'FunctionalClass', 'RouteName'],
+            //headers: ['Jurisdiction', 'Functional Class', 'Route Name', 'Length', 'Lane Miles'],
+            //fields: ['Jurisdiction', 'FunctionalClass', 'RouteName', 'Length', 'LaneMiles'],
+            levels: ['Jurisdiction', 'FunctionalClass'],
             sums: ['Length', 'LaneMiles'],
             averages: [],
-            headers: ['Jurisdiction', 'Functional Class', 'Route Name', 'Length', 'Lane Miles'],
-            fields: ['Jurisdiction', 'FunctionalClass', 'RouteName', 'Length', 'LaneMiles'],
+            headers: ['Jurisdiction', 'Functional Class', 'Length', 'Lane Miles'],
+            fields: ['Jurisdiction', 'FunctionalClass', 'Length', 'LaneMiles'],
         });
         this.fireEvent('reportRequest', reportRequest);
 

@@ -86,7 +86,30 @@ Ext.define('DEMO.controller.ChartInvoker', {
     },
 
     onGrid: function() {
-        this.application.fireEvent('reportRequest');
+        var queryData = undefined;
+        Ext.Ajax.request({
+            url: 'features.json',
+            async: false,
+            scope: this,
+            success: function(response){
+                queryData = JSON.parse(response.responseText);
+            }
+        }, this);
+
+        var featureData = queryData['RouteFeatureResults'];
+
+        var reportRequest = Ext.create('DEMO.model.ReportRequest', {
+            data:featureData,
+            //levels: ['Jurisdiction', 'FunctionalClass', 'RouteName'],
+            //headers: ['Jurisdiction', 'Functional Class', 'Route Name', 'Length', 'Lane Miles'],
+            //fields: ['Jurisdiction', 'FunctionalClass', 'RouteName', 'Length', 'LaneMiles'],
+            levels: ['Jurisdiction', 'FunctionalClass'],
+            sums: ['Length', 'LaneMiles'],
+            averages: [],
+            headers: ['Jurisdiction', 'Functional Class', 'Length', 'Lane Miles'],
+            fields: ['Jurisdiction', 'FunctionalClass', 'Length', 'LaneMiles'],
+        });
+        this.application.fireEvent('reportRequest', reportRequest);
     },
 
 });
