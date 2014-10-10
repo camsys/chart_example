@@ -2,11 +2,7 @@ Ext.define('DEMO.controller.ChartInvoker', {
 
     extend : 'Ext.app.Controller',
 
-    //define the stores
-    stores : ['ChartDatapoints'],
-    //define the models
-    models : ['ChartDatapoint', 'ChartRequest'],
-    //define the views
+    models : ['ChartRequest'],
     views : ['chart.BarChart','chart.ColumnChart','chart.PieChart','chart.LineChart'],
 
     refs:[
@@ -38,13 +34,23 @@ Ext.define('DEMO.controller.ChartInvoker', {
 
 
     onBarTypeChart: function() {
+        var reportRequest = Ext.create('DEMO.model.ReportRequest', {
+            data:featureData,
+            levels: ['Jurisdiction', 'FunctionalClass'],
+            sums: ['Length', 'LaneMiles'],
+            averages: [],
+            headers: ['Jurisdiction', 'Functional Class', 'Length', 'Lane Miles'],
+            fields: ['Jurisdiction', 'FunctionalClass', 'Length', 'LaneMiles'],
+        });
+
         var chartEvent = Ext.create('DEMO.model.ChartRequest', {
             type: 'bar',
             xtitle: 'U.S. Cities',
             ytitle: 'Population',
             xfield: 'metric',
             yfield: 'name',
-            seriesTitle: 'Current Year 2014'
+            seriesTitle: 'Current Year 2014',
+            reportRequest: reportRequest
         });
         this.application.fireEvent('chartRequest', chartEvent);
     },
@@ -100,9 +106,6 @@ Ext.define('DEMO.controller.ChartInvoker', {
 
         var reportRequest = Ext.create('DEMO.model.ReportRequest', {
             data:featureData,
-            //levels: ['Jurisdiction', 'FunctionalClass', 'RouteName'],
-            //headers: ['Jurisdiction', 'Functional Class', 'Route Name', 'Length', 'Lane Miles'],
-            //fields: ['Jurisdiction', 'FunctionalClass', 'RouteName', 'Length', 'LaneMiles'],
             levels: ['Jurisdiction', 'FunctionalClass'],
             sums: ['Length', 'LaneMiles'],
             averages: [],

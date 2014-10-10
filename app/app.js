@@ -20,7 +20,7 @@ Ext.application({
         'Bridges'
     ],
 
-    models : ['ChartDatapoint', 'ChartRequest'],
+    models : ['ChartRequest'],
 
     autoCreateViewport: true,
 
@@ -39,27 +39,33 @@ Ext.application({
         var featureData = queryData['RouteFeatureResults'];
 
         var reportRequest = Ext.create('DEMO.model.ReportRequest', {
+            type: 'bar',
             data:featureData,
-            //levels: ['Jurisdiction', 'FunctionalClass', 'RouteName'],
-            //headers: ['Jurisdiction', 'Functional Class', 'Route Name', 'Length', 'Lane Miles'],
-            //fields: ['Jurisdiction', 'FunctionalClass', 'RouteName', 'Length', 'LaneMiles'],
+            headers: ['Jurisdiction', 'Functional Class', 'Length', 'Lane Miles'],
+            fields: ['Jurisdiction', 'FunctionalClass', 'Length', 'LaneMiles'],
             levels: ['Jurisdiction', 'FunctionalClass'],
             sums: ['Length', 'LaneMiles'],
             averages: [],
+            title: 'Routes'
+        });
+        var reportRequests = [];
+        reportRequests.push(reportRequest);
+        var bridgeData = queryData['BridgeFeatureResults'];
+
+        var bridgesRequest = Ext.create('DEMO.model.ReportRequest', {
+            type: 'bar',
+            data:bridgeData,
             headers: ['Jurisdiction', 'Functional Class', 'Length', 'Lane Miles'],
             fields: ['Jurisdiction', 'FunctionalClass', 'Length', 'LaneMiles'],
+            levels: ['Jurisdiction', 'FunctionalClass'],
+            sums: ['Length', 'LaneMiles'],
+            averages: [],
+            title: 'Bridges'
         });
-        this.fireEvent('reportRequest', reportRequest);
 
-        /*var chartRequest = Ext.create('DEMO.model.ChartRequest', {
-                type: 'bar',
-                xtitle: 'U.S. Cities',
-                ytitle: 'Population',
-                xfield: 'metric',
-                yfield: 'name',
-                seriesTitle: 'Current Year 2014'
-        });
-        this.fireEvent('chartRequest', chartRequest);*/
+        reportRequests.push(bridgesRequest);
+        this.fireEvent('chartRequest', reportRequests);
+
     }
 });
 

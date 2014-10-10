@@ -1,13 +1,7 @@
 Ext.define('DEMO.controller.GridController', {
-    extend : 'Ext.app.Controller',
-
-    views : ['grid.SummaryGrid'],
+    extend : 'DEMO.controller.BaseReportController',
 
     refs:[
-        {
-            ref: 'summaryGrid',
-            selector: 'summaryGrid'
-        },
         {
             ref: 'reportPanel',
             selector: 'reportPanel'
@@ -36,48 +30,79 @@ Ext.define('DEMO.controller.GridController', {
         });
     },
 
-    selectReport: function (reportRequest) {
+    selectReport: function (reportRequests) {
         for (i = 0; i < this.getReportPanel().items.getCount(); ++i) {
             this.getReportPanel().items.get(i).destroy()
         }
-        var summaryGrid = Ext.widget("summaryGrid");
-        var columnCount = reportRequest.getHeaders().length;
-        summaryGrid.layout.columns = columnCount;
+        Ext.each(reportRequests, function (reportRequest) {
+            var reportPanel = Ext.widget("panel");
+            reportPanel.title = reportRequest.getTitle();
 
-        var featureData = reportRequest.getData();
-
-        Ext.each(featureData, function (feature) {
-            if(feature['Length'] && feature['NumberOfLanes']){
-                feature.LaneMiles  = feature['Length'] * feature['NumberOfLanes']
-            }else{
-                feature.LaneMiles = 0;
-            }
-        });
-
-        var tree = this.buildHierarchy(featureData, reportRequest);  //create the tree based on the levels defined in request
-        this.buildTable(tree, summaryGrid, reportRequest);  //add the data to the table
-
-        //now add a summary section below that aggregates by the second dimension
-        var topLevel = reportRequest.getLevels().shift();
-        tree = this.buildHierarchy(featureData, reportRequest);
-        var summaryRoot = {};
-        summaryRoot.level = topLevel;
-        summaryRoot.text = "All " + topLevel + "s";
-        summaryRoot.children = tree;
-
-        reportRequest.getLevels().unshift(topLevel);  //put the level back in so the column offsets are correct
-        Ext.each(reportRequest.getSums(), function (sum) {
-            Ext.each(summaryRoot.children, function (child) {
-                if(!summaryRoot[sum]){
-                    summaryRoot[sum] = 0;
+            var summaryGrid = {
+                cells: [],
+                add: function (cell) {
+                    this.cells.push(cell);
                 }
-                summaryRoot[sum] = summaryRoot[sum] + child[sum];
+            }
+
+            var featureData = reportRequest.getData();
+
+            Ext.each(featureData, function (feature) {
+                if(feature['Length'] && feature['NumberOfLanes']){
+                    feature.LaneMiles  = feature['Length'] * feature['NumberOfLanes']
+                }else{
+                    feature.LaneMiles = 0;
+                }
             });
+
+            var tree = this.buildHierarchy(featureData, reportRequest);  //create the tree based on the levels defined in request
+            this.buildTable(tree, summaryGrid, reportRequest);  //add the data to the table
+
+            //now add a summary section below that aggregates by the second dimension
+            var topLevel = reportRequest.getLevels().shift();
+            tree = this.buildHierarchy(featureData, reportRequest);
+            var summaryRoot = {};
+            summaryRoot.level = topLevel;
+            summaryRoot.text = "All " + topLevel + "s";
+            summaryRoot.children = tree;
+
+            reportRequest.getLevels().unshift(topLevel);  //put the level back in so the column offsets are correct
+            Ext.each(reportRequest.getSums(), function (sum) {
+                Ext.each(summaryRoot.children, function (child) {
+                    if(!summaryRoot[sum]){
+                        summaryRoot[sum] = 0;
+                    }
+                    summaryRoot[sum] = summaryRoot[sum] + child[sum];
+                });
+            }, this);
+
+            this.buildTable(summaryRoot, summaryGrid, reportRequest);
+
+            var columnCount = reportRequest.getHeaders().length;
+
+            var table = '<table><tbody><tr>'
+            var rowcount = 0;
+
+            Ext.each(summaryGrid.cells, function (cell) {
+                table = table.concat('<td'
+                    + (cell.cellCls ? ' class='+ cell.cellCls : '')
+                    + (cell.colspan ? ' colspan='+ cell.colspan : '') + '>'
+                    + cell.html.toString() +
+                    '</td>');
+                rowcount = rowcount + (cell.colspan ? cell.colspan: 1);
+                if(rowcount % columnCount == 0){
+                    table = table.concat('</tr><tr>');
+                    rowcount = 0;
+                }
+            }, this);
+
+            table.concat('</tr></tbody></table>');
+            reportPanel.add({
+                html: table.toString()
+            });
+
+            this.getReportPanel().add(reportPanel);
         }, this);
-
-        this.buildTable(summaryRoot, summaryGrid, reportRequest);
-
-        this.getReportPanel().add(summaryGrid);
     },
 
     buildTable: function (tree, table, reportRequest) {
@@ -175,101 +200,4 @@ Ext.define('DEMO.controller.GridController', {
         }, this);
     },
 
-    buildHierarchy: function (records, reportRequest) {
-
-            records = this.processTree(records, 0, reportRequest.levels, reportRequest.sums, reportRequest.averages);
-
-            /*var totalNode = [];
-            totalNode.text = 'Total';
-            totalNode.leaf = true;
-
-            var averages = reportRequest.averages;
-            var sums = reportRequest.sums;
-
-            for (var i in records) {
-                var rec = records[i];
-                for (var i in sums) {
-                    var sum = sums[i];
-                    if(!totalNode[sum]){
-                        totalNode[sum] = 0;
-                    }
-                    totalNode[sum] = totalNode[sum] + rec[sum];
-                };
-                for (var i in averages) {
-                    var average = averages[i];
-                    if(!totalNode[average]){
-                        totalNode[average] = 0;
-                    }
-                    totalNode[average] = totalNode[average] + rec[average];
-                };
-            };
-
-
-            for (var i in averages) {
-                var average = averages[i];
-                totalNode[average] = totalNode[average] / records.length;
-            };
-            records.push(totalNode);*/
-            return records;
-        },
-
-
-    processTree: function (records, depth, levels, sums, averages) {
-        var field = levels[depth];
-        var keys = {};
-        Ext.each(records, function (rec) {
-            key = rec[field];
-            keys[key] = key;
-        });
-        var aggs = [];
-        var keys = Object.keys(keys);
-        keys.sort();
-
-        Ext.each(keys, function (key) {
-            var node = [];
-            node.level = field;
-            node.text = key;
-            node.children = [];
-            Ext.each(records, function (rec) {
-                if (rec[field] == key) {
-                    Ext.each(sums, function (sum) {
-                        if(!node[sum]){
-                            node[sum] = 0;
-                        }
-                        node[sum] = node[sum] + rec[sum];
-                    });
-
-                    Ext.each(averages, function (average) {
-                        if(!node[average]){
-                            node[average] = 0;
-                        }
-                        if(rec[average]){
-                            node[average] = node[average] + rec[average];
-                        }
-                    });
-                    node.children.push(rec);
-                }
-            });
-            aggs.push(node);
-        });
-        Ext.each(aggs, function (agg) {
-            for (var fieldName in agg) {
-                if(averages.indexOf(fieldName) > -1){
-                    agg[fieldName] = agg[fieldName] / agg.children.length;
-                }
-            }
-        });
-
-        Ext.each(aggs, function (agg) {
-            if(levels.length > depth + 1){
-                agg.children = this.processTree(agg.children, depth + 1, levels, sums, averages);
-                Ext.each(agg.children, function (child) {
-                    child.parent = agg;
-                }, this);
-            }
-        }, this);
-
-        return aggs;
-
-    }
 });

@@ -7,7 +7,7 @@ Ext.define('DEMO.view.chart.PieChart' ,{
     width: 800,
     animate: true,
     shadow: true,
-    store : 'ChartDatapoints',
+    store : '',
     theme: 'Base:gradients',
     legend: {
         position: 'right'

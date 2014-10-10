@@ -7,7 +7,7 @@ Ext.define('DEMO.view.chart.LineChart' ,{
     width: 1000,
     animate: true,
     shadow: true,
-    store : 'ChartDatapoints',
+    store : '',
     theme: 'Base',
     legend: {
         position: 'bottom'

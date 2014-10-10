@@ -1,4 +1,6 @@
 Ext.define('DEMO.view.ReportPanel', {
-    extend: 'Ext.container.Container',
+    extend: 'Ext.tab.Panel',
     alias : 'widget.reportPanel',
+    autoScroll: true,
+    layout:'fit',
 });

@@ -1,11 +1,13 @@
 Ext.define('DEMO.model.ReportRequest', {
     config:{
+        type: '',
         data:'',
         sums:[],
         averages:[],
         levels: [],
         headers: [],
-        fields: []
+        fields: [],
+        title: ''
     },
     constructor:function (config) {
         this.initConfig(config);
@@ -28,6 +30,12 @@ Ext.define('DEMO.model.ReportRequest', {
         },
         getFields:function () {
             return this.fields;
+        },
+        getTitle:function () {
+            return this.title;
+        },
+        getType:function () {
+            return this.type;
         },
     }
 

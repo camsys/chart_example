@@ -7,13 +7,13 @@ Ext.define('DEMO.view.chart.ColumnChart' ,{
     width: 1000,
     animate: true,
     shadow: true,
-    store : 'ChartDatapoints',
+    store : '',
     theme: 'Base',
-    legend: {
+    /*legend: {
         position: 'float',
         x: 800,
         y: 0
-    },
+    },*/
     
     axes: [{
         type: 'Numeric',
@@ -24,7 +24,7 @@ Ext.define('DEMO.view.chart.ColumnChart' ,{
         },
         title: '',
         grid: true,
-        minimum: 100000,
+        minimum: 0,
         majorTickSteps: 15
     }, {
         type: 'Category',
